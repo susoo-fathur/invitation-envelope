@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>eh bentar 👀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6efe4;--card:#fffaf2;--ink:#3a241b;--soft:#8a7062;--red:#b23a35;--pink:#f1c9c4;--line:#e6d8c6;
+ --display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;--body:'Instrument Sans',system-ui,-apple-system,sans-serif;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#241611;--card:#3a251d;--ink:#f6efe4;--soft:#b9a392;--red:#e0645d;--pink:#6b3a38;--line:#4a3228}}
+:root[data-theme="dark"]{--bg:#241611;--card:#3a251d;--ink:#f6efe4;--soft:#b9a392;--red:#e0645d;--pink:#6b3a38;--line:#4a3228}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.45;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.5;pointer-events:none;z-index:0;background:var(--pink)}
+.b1{width:55vmax;height:55vmax;top:-22vmax;right:-22vmax}
+.b2{width:40vmax;height:40vmax;bottom:-20vmax;left:-18vmax;opacity:.3}
+main{position:relative;z-index:1;height:100%;max-width:480px;margin:0 auto}
+.scene{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:28px 26px 36px;gap:10px;overflow-y:auto}
+.scene.on{display:flex}
+.r{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
+.r.in{opacity:1;transform:none}
+p{margin:0}
+.b{align-self:flex-start;max-width:88%;background:var(--card);border:1px solid var(--line);border-radius:20px 20px 20px 6px;padding:10px 16px;min-height:44px}
+.b:nth-of-type(even){border-radius:20px 20px 6px 20px}
+.dots i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--soft);animation:d 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes d{40%{transform:translateY(-4px);opacity:.4}}
+h1,h2,.big{font-family:var(--display);margin:6px 0 0;letter-spacing:-.03em;line-height:1}
+h2{font-size:clamp(30px,9vw,40px);font-weight:800}
+.big{font-size:clamp(64px,22vw,104px);font-weight:800;color:var(--red);transform:rotate(-3deg);transform-origin:left}
+.tilt{display:inline-block;font-size:38px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px) rotate(8deg)}}
+.soft{color:var(--soft);font-size:16px}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+.btn{align-self:flex-start;margin-top:10px;background:var(--ink);color:var(--bg);font-weight:600;padding:13px 22px;border-radius:999px;transition:transform .15s}
+.btn:active{transform:scale(.95)}
+.btn.red{background:var(--red);color:#fff}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn:disabled{opacity:.35;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.row .btn{margin-top:0}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.picks{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.pick{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:11px 18px;font-weight:500;transition:transform .25s cubic-bezier(.3,1.7,.5,1),background .2s,border-color .2s}
+.pick:nth-child(odd):active{transform:rotate(-3deg)}
+.pick[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff;transform:rotate(-2deg) scale(1.06)}
+.pick:nth-child(even)[aria-pressed="true"]{transform:rotate(2deg) scale(1.06)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--pink);border-radius:999px;padding:5px 13px;font-size:15px;font-weight:500}
+.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--display);font-weight:800;font-size:24px;margin-top:10px}
+.flow span{opacity:.3;transition:all .5s}
+.flow span.hit{opacity:1;color:var(--red)}
+.flow s{text-decoration-color:transparent;text-decoration-thickness:3px;transition:text-decoration-color .6s}
+.flow .hit s{text-decoration-color:var(--red)}
+.flow i{font-style:normal;opacity:.4}
+.reaction{min-height:1.5em;font-size:16px;color:var(--soft)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:5}
+.heart{position:fixed;bottom:-30px;z-index:4;pointer-events:none;animation:up linear forwards}
+@keyframes up{to{transform:translateY(-110vh) translateX(var(--dx)) rotate(var(--rot));opacity:0}}
+.pop{animation:pop .6s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+@media (prefers-reduced-motion:reduce){.r{transition:none;transform:none}.heart,.tilt,.dots i{animation:none}.pop{animation:none}}
+
+/* playful destination + ticket details */
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.place-card{position:relative;overflow:hidden;border:1.5px solid var(--ink);border-radius:22px;background:var(--card);padding:20px 18px 18px;margin:5px 0;box-shadow:5px 5px 0 var(--line)}
+.place-card:after{content:"";position:absolute;width:100px;height:100px;border:1px solid var(--line);border-radius:50%;right:-28px;top:-28px;box-shadow:0 0 0 12px var(--card),0 0 0 13px var(--line),0 0 0 25px var(--card),0 0 0 26px var(--line);opacity:.8}
+.place-card .big{font-size:clamp(52px,17vw,78px);margin:7px 0 8px;position:relative;z-index:1}
+.place-sub{font-size:14px;color:var(--soft);position:relative;z-index:1}
+.pick-feedback{min-height:1.4em;font-size:14px;color:var(--soft)}
+.ticket{background:var(--card);border:1.5px solid var(--ink);border-radius:18px;overflow:hidden;box-shadow:6px 6px 0 var(--line);margin:8px 0 4px}
+.ticket-head{background:var(--red);color:#fff;padding:16px 18px 14px}
+.ticket-head .eyebrow{color:#ffe3dc}
+.ticket-title{font-family:var(--display);font-size:clamp(30px,9vw,42px);line-height:.95;font-weight:800;letter-spacing:-.04em;margin-top:7px}
+.ticket-body{padding:16px 18px}
+.ticket-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.ticket-row:last-child{border-bottom:0}
+.ticket-row span:first-child{color:var(--soft)}
+.ticket-row strong{text-align:right;font-weight:600}
+.ticket-note{font-size:13px;color:var(--soft);padding:0 18px 16px}
+
+.ticket-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:9px;
+  margin-top:12px;
+  width:100%;
+}
+
+.ticket-actions .btn{
+  margin-top:0;
+  width:100%;
+  max-width:100%;
+  align-self:stretch;
+  white-space:normal;
+  text-align:center;
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+
+/* Layout khusus halaman tiket terakhir */
+.final-scene{
+  justify-content:flex-start;
+  align-items:stretch;
+  gap:12px;
+  padding-top:max(24px, env(safe-area-inset-top, 0px));
+  padding-bottom:max(32px, env(safe-area-inset-bottom, 0px));
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scroll-padding-block:24px;
+}
+
+.final-scene > *{
+  flex-shrink:0;
+  min-width:0;
+}
+
+.final-scene .b{
+  max-width:100%;
+  overflow-wrap:anywhere;
+  line-height:1.45;
+}
+
+.final-scene h2{
+  line-height:1.08;
+  overflow-wrap:anywhere;
+}
+
+.final-scene .ticket{
+  width:100%;
+  min-width:0;
+}
+
+.final-scene .ticket-title{
+  line-height:1.05;
+  overflow-wrap:anywhere;
+}
+
+.final-scene .ticket-row{
+  align-items:flex-start;
+  gap:10px;
+}
+
+.final-scene .ticket-row span:first-child{
+  flex:0 0 70px;
+}
+
+.final-scene .ticket-row strong{
+  flex:1 1 0;
+  min-width:0;
+  text-align:right;
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+
+.final-scene .ticket-note,
+.final-scene .bonus-note{
+  overflow-wrap:anywhere;
+  line-height:1.5;
+}
+
+@media (max-width:380px){
+  .scene{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .ticket-title{font-size:30px}
+
+  .final-scene .ticket-row{
+    gap:8px;
+  }
+
+  .final-scene .ticket-row span:first-child{
+    flex-basis:62px;
+  }
+
+  .final-scene .ticket-row strong{
+    text-align:left;
+  }
+}
+
+
+/* opening envelope intro */
+#envelope-intro{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--bg);transition:opacity .65s ease,visibility .65s ease}
+#envelope-intro.gone{opacity:0;visibility:hidden;pointer-events:none}
+.env-wrap{width:min(340px,86vw);text-align:center;display:flex;flex-direction:column;align-items:center;gap:22px}
+.env-note{font-family:var(--display);font-size:clamp(25px,7vw,32px);line-height:1.08;font-weight:800;letter-spacing:-.04em}
+.env-sub{color:var(--soft);font-size:15px;margin-top:-12px}
+.env-button{position:relative;width:min(300px,78vw);height:190px;background:transparent;border:0;padding:0;perspective:900px;filter:drop-shadow(0 12px 10px #3a241b18)}
+.env-body{position:absolute;inset:28px 0 0;background:#e9b9ae;border:1.5px solid #b97d73;border-radius:5px 5px 12px 12px;overflow:hidden}
+.env-body:before,.env-body:after{content:"";position:absolute;bottom:0;width:0;height:0;border-style:solid;z-index:2}
+.env-body:before{left:0;border-width:0 0 160px 150px;border-color:transparent transparent #f2c9bf transparent}
+.env-body:after{right:0;border-width:0 0 160px 150px;border-color:transparent transparent #dca49a transparent;transform:scaleX(-1)}
+.env-flap{position:absolute;left:0;right:0;top:28px;height:0;border-left:150px solid transparent;border-right:150px solid transparent;border-top:105px solid #d99d93;transform-origin:top;transition:transform .65s ease;z-index:4}
+.env-seal{position:absolute;z-index:5;left:50%;top:98px;transform:translateX(-50%);width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--red);color:white;font-size:24px;box-shadow:0 2px 0 #8e2c29}
+.env-button:active{transform:scale(.98)}
+.env-button.open .env-flap{transform:rotateX(180deg);z-index:1}
+.env-button.open .env-seal{opacity:0;transition:opacity .2s}
+.env-cta{font-weight:700;color:var(--red);font-size:15px;letter-spacing:.03em;animation:bob 1.5s ease-in-out infinite}
+.env-secret{border:0;background:transparent;color:var(--soft);font-size:13px;text-decoration:underline;text-underline-offset:3px;padding:8px 12px}
+.secret-note{max-width:290px;min-height:20px;color:var(--red);font-size:14px;font-weight:600}
+@media (prefers-reduced-motion:reduce){#envelope-intro,.env-flap{transition:none}.env-cta{animation:none}}
+
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<main id="app" aria-live="polite"></main>
+
+<script>
+/* ===== EDIT DI SINI: semua teks ada di CONFIG ===== */
+const CONFIG = {
+  open1: ["eh, bentar 👀", "ada proposal kecil nih buat lu"], open1Btn: "proposal apaan?",
+  open2: ["gue mau ngajak lu jalan sebenernya", "daripada cuma bilang \"jalan yuk\" doang...", "gue bikin versi niatnya dikit wkwk"], open2Btn: "oke, lanjut 😭",
+  ask: ["November abis UTS lu kira-kira ada waktu kosong nggak?", "kalau lu berkenan, gue pengen ngajak lu jalan."], askBtn: "ke mana emangnya?",
+  reveal1: ["rencananya santai aja kok 😭", "kepikiran buat ke..."], place: "BLOK M",
+  reveal2: "nggak harus ngikutin itinerary kaku. jalan, jajan, ngobrol, terus lihat situasi wkwk.", revealBtn: "boleh juga 👀",
+  pickTitle: "kalau ke sana, pengen ngapain?", pickHint: "pilih yang menarik. boleh pilih beberapa, atau serahin ke spontanitas 😌",
+  activities: ["🍜 cari makan", "☕ ngopi", "🚶 keliling", "📸 foto-foto", "🛍️ lihat-lihat", "🤷 spontan aja"], pickBtn: "catat dulu ✍️",
+  noted: ["siap, masuk daftar rencana 😌", "tanggal pastinya santai, nanti kita cocokin setelah UTS."], notedBtn: "terus gimana?",
+  plan: ["nggak perlu mutusin tanggal sekarang kok.", "fokus UTS dulu, nanti kalau sama-sama senggang baru atur hari."], flow: ["UTS", "kelar", "jalan?"], planBtn: "oke, masuk akal",
+  final: ["nah, itu aja proposal kecil dari gue 😭", "kalau November abis UTS, lu tertarik ke Blok M bareng gue nggak?"], yes: "boleh, gas 😌", maybe: "gue pikir-pikir dulu 👀",
+  maybeReplies: ["santai, nggak harus jawab sekarang kok 😌", "nggak ada deadline buat jawab wkwk.", "kalau udah tahu jadwal lu, kabarin aja ya.", "yang penting UTS kita lewatin dulu 🤝"],
+  done: ["WOKEEE, CALON RENCANA TERCATAT ✍️", "belum jadi janji resmi sampai kita nemu tanggal yang cocok wkwk."], replay: "lihat lagi dari awal"
+};
+/* ================================================== */
+
+const $app = document.getElementById('app');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sleep = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 50) : ms));
+const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
+let token = 0, picks = new Set();
+
+async function reveal(scene, my) {
+  for (const n of scene.querySelectorAll('.r')) {
+    if (my !== token) return;
+    if (n.dataset.t) {
+      n.classList.add('in'); n.innerHTML = '<span class="dots"><i></i><i></i><i></i></span>';
+      await sleep(Math.min(350 + n.dataset.t.length * 14, 1000));
+      if (my !== token) return;
+      n.textContent = n.dataset.t; await sleep(450);
+    } else { n.classList.add('in'); await sleep(+n.dataset.wait || 350); }
+  }
+}
+function show(build) {
+  token++; const my = token; $app.innerHTML = '';
+  const s = el('section', 'scene on'); build(s); $app.appendChild(s); reveal(s, my);
+}
+const say = t => { const p = el('p', 'r b'); p.dataset.t = t; return p; };
+const btn = (t, cls, fn) => { const b = el('button', 'r btn ' + (cls || ''), t); b.type = 'button'; b.onclick = fn; return b; };
+const C = CONFIG;
+
+function open1() { show(s => { C.open1.forEach(t => s.append(say(t))); s.append(btn(C.open1Btn, '', open2)); }); }
+function open2() { show(s => { C.open2.forEach(t => s.append(say(t))); s.append(btn(C.open2Btn, '', ask)); }); }
+function ask() { show(s => { C.ask.forEach(t => s.append(say(t))); s.append(btn(C.askBtn, '', reveal1)); }); }
+
+function reveal1() { show(s => {
+  C.reveal1.forEach(t => s.append(say(t)));
+  const card = el('div', 'r place-card');
+  card.append(el('div', 'eyebrow', 'tujuan sementara · november'), el('div', 'big pop', C.place), el('div', 'place-sub', 'nggak perlu itinerary serius-serius amat.'));
+  card.dataset.wait = 850;
+  s.append(card, say(C.reveal2), btn(C.revealBtn, '', picker));
+}); }
+
+function picker() { show(s => {
+  const go = btn(C.pickBtn, '', noted);
+  const feedback = el('p', 'r pick-feedback', 'belum pilih apa-apa nih.');
+  const sync = () => {
+    go.disabled = !picks.size;
+    feedback.textContent = !picks.size ? 'belum pilih apa-apa nih.' : picks.has('🤷 terserah') ? 'aman, berarti kita tentuin spontan aja wkwk.' : picks.size === 1 ? 'sip, satu dulu juga cukup.' : `oke, ${picks.size} ide masuk daftar.`;
+  };
+  const wrap = el('div', 'r picks');
+  C.activities.forEach(a => {
+    const b = el('button', 'pick', a); b.type = 'button'; b.setAttribute('aria-pressed', picks.has(a));
+    b.onclick = () => { picks.has(a) ? picks.delete(a) : picks.add(a); b.setAttribute('aria-pressed', picks.has(a)); sync(); };
+    wrap.append(b);
+  });
+  sync();
+  s.append(el('h2', 'r', C.pickTitle), el('p', 'r soft', C.pickHint), wrap, feedback, go);
+}); }
+
+function noted() { show(s => {
+  C.noted.forEach(t => s.append(say(t)));
+  const chips = el('div', 'r chips'); [...picks].forEach(p => chips.append(el('span', 'chip', p)));
+  s.append(chips, btn(C.notedBtn, '', plan));
+}); }
+
+function plan() { show(s => {
+  C.plan.forEach(t => s.append(say(t)));
+  const f = el('div', 'r flow');
+  C.flow.forEach((t, i) => { if (i) f.append(el('i', '', '→')); f.append(el('span', '', i === 0 ? `<s>${t}</s>` : t)); });
+  s.append(f, btn(C.planBtn, '', final));
+  const sp = f.querySelectorAll('span'); const my = token;
+  (async () => { await sleep(2800); for (const x of sp) { if (my !== token) return; x.classList.add('hit'); await sleep(700); } })();
+}); }
+
+function final() { show(s => {
+  C.final.forEach(t => s.append(say(t)));
+  const reaction = el('p', 'reaction'); reaction.setAttribute('role', 'status');
+  const row = el('div', 'r row');
+  const y = el('button', 'btn red', C.yes); y.type = 'button'; y.onclick = done;
+  const m = el('button', 'btn ghost', C.maybe); m.type = 'button';
+  let i = 0; m.onclick = () => { reaction.textContent = C.maybeReplies[i++ % C.maybeReplies.length]; };
+  row.append(y, m); s.append(row, reaction);
+}); }
+
+function done() { show(s => {
+
+  s.classList.add('final-scene');
+
+  const h = el('h2', 'r pop', C.done[0]);
+  const ticket = el('div', 'r ticket');
+  const head = el('div', 'ticket-head');
+  head.append(el('div', 'eyebrow', 'unofficial plan pass'), el('div', 'ticket-title', 'ONE DAY<br>IN BLOK M'));
+  const body = el('div', 'ticket-body');
+  const chosen = picks.size ? [...picks].join(' · ') : 'lihat nanti di tempat';
+  [['KAPAN', 'November · setelah UTS'], ['AGENDA', chosen], ['STATUS', 'belum pilih tanggal']].forEach(([a,b]) => {
+    const row = el('div', 'ticket-row'); row.append(el('span', '', a), el('strong', '', b)); body.append(row);
+  });
+  ticket.append(head, body, el('div', 'ticket-note', 'berlaku setelah UTS selesai. tanggal dan detail menyusul wkwk.'));
+  const share = btn('kirim jawaban ke WhatsApp ↗', 'red', () => {
+    const message = `GAS! Aku mau ikut ke Blok M November setelah UTS 😌\nIde kegiatan: ${chosen}. Nanti kita cari tanggal yang cocok ya.`;
+    window.open('https://wa.me/6289505888507?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
+  });
+  const bonus = btn('ada bonus kecil? 🤫', 'ghost', () => { const note = s.querySelector('.bonus-note'); note.textContent = 'bonusnya: makasih udah baca sampai sini wkwk. kalau lu nyaman, kita lanjut rencanain bareng-bareng aja 😌'; bonus.disabled = true; });
+  const note = el('p', 'r reaction bonus-note', '');
+  const replay = btn(C.replay, 'ghost', () => { picks = new Set(); open1(); });
+  const actions = el('div', 'r ticket-actions'); actions.append(share, bonus, replay);
+  s.append(ticket, note, actions);
+  confetti();
+}); }
+
+function confetti() {
+  if (reduce) return;
+  const cv = document.getElementById('fx'), cx = cv.getContext('2d');
+  cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ['#b23a35', '#f1c9c4', '#3a241b', '#e8b86d', '#fffaf2'];
+  const ps = Array.from({ length: 110 }, () => ({ x: cv.width / 2, y: cv.height * .6, vx: (Math.random() - .5) * 15, vy: -Math.random() * 15 - 5, s: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[Math.random() * cols.length | 0] }));
+  let f = 0;
+  (function tick() {
+    cx.clearRect(0, 0, cv.width, cv.height);
+    ps.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += p.vr; cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cx.restore(); });
+    if (++f < 170) requestAnimationFrame(tick); else cx.clearRect(0, 0, cv.width, cv.height);
+  })();
+}
+function startEnvelope() {
+  const intro = document.createElement('div');
+  intro.id = 'envelope-intro';
+  intro.innerHTML = `<div class="env-wrap"><div class="env-note">eh, ada surat buat lu 👀</div><div class="env-sub">dibuka dulu, kalau penasaran...</div><button class="env-button" type="button" aria-label="Buka amplop"><span class="env-body"></span><span class="env-flap"></span><span class="env-seal">♥</span></button><div class="env-cta">KLIK BUAT BUKA ✉</div><button class="env-secret" type="button">atau klik sini kalau kepo 🤏</button><div class="secret-note" aria-live="polite"></div></div>`;
+  document.body.appendChild(intro);
+  const envelope = intro.querySelector('.env-button');
+  const open = () => {
+    if (envelope.classList.contains('open')) return;
+    envelope.classList.add('open');
+    intro.querySelector('.env-note').textContent = 'buat seseorang yang spesial :)';
+    intro.querySelector('.env-cta').textContent = 'sebentar ya...';
+    setTimeout(() => {
+      intro.classList.add('gone');
+      setTimeout(() => { intro.remove(); open1(); }, reduce ? 50 : 650);
+    }, reduce ? 50 : 700);
+  };
+  envelope.addEventListener('click', open);
+  intro.querySelector('.env-cta').addEventListener('click', open);
+  const secret = intro.querySelector('.env-secret');
+  secret.addEventListener('click', () => { intro.querySelector('.secret-note').textContent = 'tenang, ini bukan surat cinta kok... cuma ajakan jalan. kayaknya 😭'; secret.textContent = 'oke, sekarang buka amplop ✉'; });
+}
+startEnvelope();
+</script>
+</body>
+</html>
